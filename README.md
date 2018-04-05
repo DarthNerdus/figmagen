@@ -1,6 +1,6 @@
 ## figmagen
 
-A python script to retrieve programmatically retrieve Figma design files and generate SVGs use the first-party Figma API.
+A python script to retrieve programmatically retrieve Figma design files and generate SVGs using the first-party Figma API.
 
 ### Requirements
 ```bash
