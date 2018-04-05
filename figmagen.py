@@ -27,6 +27,8 @@ workFlow = False
 if environ.get('FIGMA_WORKFLOW') is not None:
     workFlow = bool(environ.get('FIGMA_WORKFLOW'))
 
+fileFormat = "svg"
+
 def parse_figma(json, frames=False, selection=''):
     # Succeed placed here due to startup time of fzf
     spinner.succeed()
@@ -40,7 +42,7 @@ def parse_figma(json, frames=False, selection=''):
 
 def get_figma_image(fileId, ids):
     spinner.start("Requesting images from Figma...")
-    url = "https://api.figma.com/v1/images/{}?ids={}&format=svg".format(fileId, ','.join(id[1] for id in ids))
+    url = "https://api.figma.com/v1/images/{}?ids={}&format={}".format(fileId, ','.join(id[1] for id in ids), fileFormat)
     response = requests.get(url, headers=headers)
     spinner.succeed()
     urls = []
@@ -90,9 +92,12 @@ OPTIONS:
             except:
                 print "File must be provided with format `--file='ABC123'`"
                 sys.exit()
+        elif arg == "--png":
+                fileFormat = "png&scale=2.0"
         else:
             specified = True
-            idArgs.append(arg)
+            # Add arg as name to avoid parsing entire file for request
+            idArgs.append([arg, arg])
             
     if fileId == "":
         print "File must be provided in format `--file='ABC123'`"
@@ -103,7 +108,7 @@ OPTIONS:
         sys.exit()
         
     if specified:
-        get_figma_image(fileId, ",".join(idArgs))
+        get_figma_image(fileId, idArgs)
     else:
         url = "https://api.figma.com/v1/files/{}".format(fileId)
         spinner.start('Fetching Figma file: {}'.format(fileId))
