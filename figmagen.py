@@ -55,7 +55,13 @@ def get_figma_image(fileId, ids):
                 if x[1] == key:
                     print "{} -- {}".format(x[0], response.json()['images'][key])
     if (len(urls) > 0) and workFlow:
-        print "\nWorkflow URL -- workflow://run-workflow?name=Figma%20URL&input=text&text={}".format(",".join(urls))
+        workflowurl = "workflow://run-workflow?name=Figma%20URL&input=text&text={}".format(",".join(urls))
+        print "\nWorkflow URL -- {}".format(workflowurl)
+        if environ.get('FIGMA_WORKFLOW_PATH') is not None:
+            file = open(environ.get('FIGMA_WORKFLOW_PATH'), "w+")
+            file.write("<a href=\"{}\">Workflow</a>".format(workflowurl))
+            if environ.get('FIGMA_WORKFLOW_URL') is not None:
+                print "\n{}".format(environ.get('FIGMA_WORKFLOW_URL'))
 
 if __name__=="__main__":
     specified = False
