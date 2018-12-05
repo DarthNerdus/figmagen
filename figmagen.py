@@ -34,10 +34,12 @@ def parse_figma(json, frames=False, selection=''):
     spinner.succeed()
     for canvas in json['document']['children']:
         canvasString = "{} -- {}".format(uni(canvas['name']), uni(canvas['id']))
+        canvasString = canvasString.replace('\n', '')
         yield canvasString
     for canvas in json['document']['children']:
         for frame in canvas['children']:
             frameString = "{}.{} -- {}".format(uni(canvas['name']), uni(frame['name']), uni(frame['id']))
+            frameString = frameString.replace('\n', '')
             yield frameString
 
 def get_figma_image(fileId, ids):
@@ -53,7 +55,7 @@ def get_figma_image(fileId, ids):
             urls.append(response.json()['images'][key])
             for x in ids:
                 if x[1] == key:
-                    print "{} -- {}".format(x[0], response.json()['images'][key])
+                    print "{} -- {} -- {}".format(key, x[0], response.json()['images'][key])
     if (len(urls) > 0) and workFlow:
         workflowurl = "workflow://run-workflow?name=Figma%20URL&input=text&text={}".format(",".join(urls))
         print "\nWorkflow URL -- {}".format(workflowurl)
